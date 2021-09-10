@@ -10,6 +10,8 @@ require(tidyquant)
 SwcwsZZ <- loadByProduct(dpID="DP1.00094.001", site="JORN",
                          startdate="2017-07", enddate="2021-08",
                          package="basic", avg=30, check.size=T)
+
+#
 y
 SwcwsZZ # Soil water and Soil Ion Content from 2017 - 2020
 
