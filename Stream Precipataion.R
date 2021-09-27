@@ -24,11 +24,8 @@ write.table(SECPRE30min, "NEON_JORN_Pricipdata_022017_082021.csv",
 ### Code starts here if code needs to be changed manipulate top codes.
 SECPRE30min <- read.csv("NEON_JORN_Pricipdata_022017_082021.csv", header= TRUE)
 
-SECPRE30min$startDateTime <- ymd_hms(SECPRE30min$startDateTime)
-SECPRE30min$endDateTime <- ymd_hms(SECPRE30min$endDateTime)
-SECPRE30min$julian <- yday(SECPRE30min$startDateTime) #add julian day and year to dataframe to make daily data
-SECPRE30min$year <- year(SECPRE30min$startDateTime)
-SECPRE30min$month <-month(SECPRE30min$startDateTime)
+Phenodays <- read.csv("NEON.D14.JORN.DP1.00033_GR_1000_1dayz.csv", header= TRUE)
+
 #calculate total percip by year & day to plot precip daily 
 total.prec2 <- SECPRE30min %>%
   group_by(year, month, julian) %>%
@@ -43,18 +40,32 @@ ggplot(data=SECPRE30min,
   xlab("Date (Daily Values)") + ylab("Precipitation (millimeters)") +
   ggtitle("30 Min Bulk Secondary Precipitation - NEON Jornada LTER\nSeptember 2014 - December 2020") +
   theme(text = element_text(size=6))
-# making a graphs for with 2014 - 2020
 
+### Precipitation and GCC
 
-
-total.prec2%>%
+Limbo <- total.prec2%>%
   ggplot(data=.,
          aes(startDateTime, sum_prec)) + 
   geom_line(na.rm=TRUE) +
-  facet_grid(.~year(startDateTime), scales = "free_x")  +
+  coord_x_datetime(xlim = c("2017-02-24 00:00:00", "2021-08-31 23:30:00")) +
   xlab("Date (Daily Values)") + ylab("Precipitation (millimeters)") +
-  ggtitle("Total Daily Bulk Secondary Precipitation - NEON Jornada LTER\nSeptember 2014 - December 2020") +
+  ggtitle("Total Daily Bulk Secondary Precipitation - NEON Jornada LTER\nFeburary 24th, 2017 - August 31 2021") +
   theme(text = element_text(size=6))
+Limbo  
+
+Phenodays$date <- as.Date(parse_date_time(Phenodays$date, c('mdy')))
+Pheno <- ggplot(data=Phenodays,
+         aes(date, midday_gcc)) + 
+  geom_line(na.rm=TRUE) +
+  coord_x_date(xlim = c("2017-02-24", "2021-08-31")) +
+  xlab("Date (Daily Values)") + ylab("GCC") +
+  ggtitle("Daily Midday GCC - NEON Jornada LTER\nFeburary 24th, 2017 - August 31 2021") +
+  theme(text = element_text(size=6))
+Pheno
+
+
+plot_grid(Limbo, Pheno, nrow =  2)
+
 
 ###Full 30 min Mean Pricip graphs
 precPlot_30minYY <- ggplot(data=SECPRE30min,

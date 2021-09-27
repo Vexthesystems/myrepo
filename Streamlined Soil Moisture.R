@@ -7,13 +7,14 @@ require(ggthemes)
 require(lubridate)
 require(dplyr)
 require(tidyquant)
-SwcwsZZ <- loadByProduct(dpID="DP1.00094.001", site="JORN",
-                         startdate="2017-07", enddate="2021-08",
-                         package="basic", avg=30, check.size=T)
+#Merging sensors with 30min Data was too much so data was reduced by one month
+#SwcwsZZ <- loadByProduct(dpID="DP1.00094.001", site="JORN",
+#                         startdate="2017-07", enddate="2021-08",
+#                         package="basic", avg=30, check.size=T)
 y
 
 SwcwsZZ <- loadByProduct(dpID="DP1.00094.001", site="JORN",
-                         startdate="2017-09", enddate="2021-08",
+                         startdate="2017-08", enddate="2021-08",
                          package="basic", avg=30, check.size=T)
 y
 
@@ -31,9 +32,10 @@ Swcws30min <- merge(Swcws30min, sens.pos, by="HOR.VER", all.x=TRUE)
 
 
 setwd("C:/Users/cater/OneDrive - University of Texas at El Paso/NEON_JORN.DP1_Project/Data")
-write.table(Swcws30min, "NEON_JORN_SoilMoisturedata_072017_082021.csv",
+
+write.table(Swcws30min, "NEON_JORN_SoilMoisturedata_082017_082021.csv",
             sep=",", dec=".", row.names=FALSE)
-Swcws30min <- read.csv("NEON_JORN_SoilMoisturedata_072017_082021.csv", header= TRUE)
+Swcws30min <- read.csv("NEON_JORN_SoilMoisturedata_082017_082021.csv", header= TRUE)
 ####Importing Corrected Depths sent Ed Ayers from NEON
 depthcorrect <- read.csv("SWC_depths_JORN.csv", header= TRUE)
 #### Merge swswcs data with corrected data 
